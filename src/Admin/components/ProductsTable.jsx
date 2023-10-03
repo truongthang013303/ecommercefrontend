@@ -9,12 +9,32 @@ import Paper from "@mui/material/Paper";
 import { deleteProduct, findProducts } from "../../State/Product/Action";
 import { useDispatch, useSelector } from "react-redux";
 import { store } from "../../State/store";
-import { Avatar, Button, Card, CardHeader } from "@mui/material";
+import InputBase from "@mui/material/InputBase";
+import { Box, IconButton } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+
+import {
+  Avatar,
+  Button,
+  Card,
+  CardActions,
+  CardHeader,
+  Pagination,
+} from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ProductsTable = () => {
   const dispatch = useDispatch();
   const { product } = useSelector((store) => store);
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  const handlePaginationChange = (event, value) => {
+    const searchParamms = new URLSearchParams(location.search);
+    searchParamms.set("page", value);
+    const query = searchParamms.toString();
+    navigate({ search: `?${query}` });
+  };
   // useEffect(() => {
   //   const data = {
   //     category: "Pants",
@@ -31,7 +51,7 @@ const ProductsTable = () => {
   //   dispatch(findProducts(data));
   // }, [product.deletedProduct]);
 
-  useEffect(()=>{
+  useEffect(() => {
     const data = {
       category: "Pants",
       colors: [],
@@ -45,7 +65,7 @@ const ProductsTable = () => {
       stock: "",
     };
     dispatch(findProducts(data));
-  }, [product.deletedProduct])
+  }, [product.deletedProduct]);
 
   const handleProductDelete = (productId) => {
     dispatch(deleteProduct(productId));
@@ -54,10 +74,23 @@ const ProductsTable = () => {
   return (
     <div className="p-5">
       <Card className="mt-2 bg-[#1b1b1b]">
-        <CardHeader title="All Products"></CardHeader>
-
+        <CardHeader title="All Products(Zosh)"></CardHeader>
+        {/* <CardActions>
+          <Button variant="contained">Contained</Button>
+        </CardActions> */}
+        <Box display="flex" justifyContent="space-between" p={2}>
+          <Button variant="contained">Add Product</Button>
+          <Box display="flex" borderRadius="3px" sx={{border:'1px solid #DFDBDB','&:hover': {
+          border:'1px solid #1976d2'
+        }}}>
+            <InputBase sx={{ ml: 2, flex: 1}} placeholder="Search"></InputBase>
+            <IconButton type="button" sx={{ p: 1 }}>
+              <SearchIcon />
+            </IconButton>
+          </Box>
+        </Box>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <Table sx={{ minWidth: 650 }} stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
                 <TableCell>Image</TableCell>
@@ -107,10 +140,18 @@ const ProductsTable = () => {
                 </TableRow>
               ))}
             </TableBody>
-
           </Table>
         </TableContainer>
       </Card>
+      <section className="w-full px=[3.6rem]">
+        <div className="px-4 py-5 flex justify-center">
+          <Pagination
+            // count={product.products?.totalPages}
+            color="secondary"
+            onChange={handlePaginationChange}
+          />
+        </div>
+      </section>
     </div>
   );
 };
