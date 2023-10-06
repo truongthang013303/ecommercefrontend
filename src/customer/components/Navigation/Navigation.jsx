@@ -23,7 +23,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { navigation } from "./navigationData";
-import { FlashOnRounded } from "@mui/icons-material";
 import { Avatar, Button, MenuItem, Menu } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import AuthModal from './../../Auth/AuthModal';

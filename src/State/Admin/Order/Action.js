@@ -1,12 +1,12 @@
 import { api } from "../../../config/apiConfig";
-import { CALCELED_ORDER_FAILURE, CALCELED_ORDER_REQUEST, CALCELED_ORDER_SUCCESS, CONFIRMED_ORDER_FAILURE, CONFIRMED_ORDER_REQUEST, CONFIRMED_ORDER_SUCCESS, DELETE_ORDER_FAILURE, DELETE_ORDER_REQUEST, DELETE_ORDER_SUCCESS, GET_ORDERS_FAILURE, GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, SHIP_ORDER_FAILURE, SHIP_ORDER_REQUEST, SHIP_ORDER_SUCCESS } from "./ActioneType";
+import { CALCELED_ORDER_FAILURE, CALCELED_ORDER_REQUEST, CALCELED_ORDER_SUCCESS, CONFIRMED_ORDER_FAILURE, CONFIRMED_ORDER_REQUEST, CONFIRMED_ORDER_SUCCESS, DELETE_ORDER_FAILURE, DELETE_ORDER_REQUEST, DELETE_ORDER_SUCCESS, GET_ORDERS_FAILURE, GET_ORDERS_PAGI_FAILURE, GET_ORDERS_PAGI_REQUEST, GET_ORDERS_PAGI_SUCCESS, GET_ORDERS_REQUEST, GET_ORDERS_SUCCESS, SHIP_ORDER_FAILURE, SHIP_ORDER_REQUEST, SHIP_ORDER_SUCCESS } from "./ActioneType";
 
 export const getOrders = ()=> {
     return async (dispatch)=>{
         dispatch({type:GET_ORDERS_REQUEST});
         try{
             const response = await api.get(`/api/admin/orders/`)
-            console.log('response', response);
+            console.log('response-getOrders()-AdminOrder', response);
             dispatch({type:GET_ORDERS_SUCCESS, payload:response.data});
         }catch(error){
             console.log(error);
@@ -14,6 +14,24 @@ export const getOrders = ()=> {
         }
     }
 }
+export const getOrdersPagi = (reqData) => async (dispatch) => {
+    dispatch({ type: GET_ORDERS_PAGI_REQUEST });
+    const {
+      sort,
+      pageNumber,
+      pageSize,
+    } = reqData;
+    try {
+      const res = await api.get(
+        `/api/admin/orders?sort=${sort}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+      );
+      console.log("getOrdersPagi-data-AdminOrder.Action.js");
+      console.log(res);
+      dispatch({ type: GET_ORDERS_PAGI_SUCCESS, payload: res.data });
+    } catch (error) {
+      dispatch({ type: GET_ORDERS_PAGI_FAILURE, payload: error.message });
+    }
+  };
 
 export const confirmOrder = (orderId)=> {
     console.log('confirmOrder', orderId);

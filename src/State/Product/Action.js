@@ -18,6 +18,16 @@ console.log("Product-Action.js");
 
 export const findProducts = (reqData) => async (dispatch) => {
   dispatch({ type: FIND_PRODUCTS_REQUEST });
+  if(reqData.minPrice==null || reqData.minPrice==undefined) reqData.minPrice='';
+  if(reqData.maxPrice==null || reqData.maxPrice==undefined) reqData.maxPrice='';
+  if(reqData.minDiscount==null || reqData.minDiscount==undefined) reqData.minDiscount='';
+  if(reqData.colors==null || reqData.colors==undefined) reqData.colors='';
+  if(reqData.sizes==null || reqData.sizes==undefined) reqData.sizes='';
+  if(reqData.sort==null || reqData.sort==undefined) reqData.sort='price_high';
+  if(reqData.stock==null || reqData.stock==undefined) reqData.stock='';
+  if(reqData.category==null || reqData.category==undefined) reqData.category='';
+  if(reqData.pageNumber==null || reqData.pageNumber==undefined) reqData.pageNumber=0;
+  if(reqData.pageSize==null || reqData.pageSize==undefined) reqData.pageSize=1;
   const {
     colors,
     sizes,
@@ -30,6 +40,16 @@ export const findProducts = (reqData) => async (dispatch) => {
     pageNumber,
     pageSize,
   } = reqData;
+  // if(minPrice==null || minPrice==undefined) minPrice='';
+  // if(maxPrice==null || maxPrice==undefined) maxPrice='';
+  // if(minDiscount==null || minDiscount==undefined) minDiscount='';
+  // if(colors==null || colors==undefined) colors='';
+  // if(sizes==null || sizes==undefined) sizes='';
+  // if(sort==null || sort==undefined) sort='price_high';
+  // if(stock==null || stock==undefined) stock='';
+  // if(category==null || category==undefined) category='';
+  // if(pageNumber==null || pageNumber==undefined) pageNumber=0;
+  // if(pageSize==null || pageSize==undefined) pageSize=1;
   try {
     const { data } = await api.get(
       `/api/products?color=${colors}&size=${sizes}&minPrice=${minPrice}&maxPrice=${maxPrice}&minDiscount=${minDiscount}&category=${category}&stock=${stock}&sort=${sort}&pageNumber=${pageNumber}&pageSize=${pageSize}`
