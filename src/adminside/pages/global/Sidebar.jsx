@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
@@ -16,6 +16,7 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import BarChartRoundedIcon from "@mui/icons-material/BarChartRounded";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -88,6 +89,22 @@ const Sidebar = () => {
               </Box>
             )}
           </MenuItem>
+          <SubMenu title="Charts" icon={<BarChartRoundedIcon />}>
+            <MenuItem>
+              Timeline Chart <Link to="/" />
+            </MenuItem>
+            <MenuItem>
+              Bubble Chart <Link to="/" />
+            </MenuItem>
+          </SubMenu>
+          <SubMenu title="Wallets" icon={<BarChartRoundedIcon />}>
+            <MenuItem>
+              Current Wallet <Link to="/" />
+            </MenuItem>
+            <MenuItem>
+              Savings Wallet <Link to="/" />
+            </MenuItem>
+          </SubMenu>
 
           {!isCollapsed && (
             <Box mb="25px">
