@@ -3,7 +3,7 @@ import { ColorModeContext, useCustomHook, useMode } from "../theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import Dashboard from "../adminside/pages/dashboard";
-import Team from "../adminside/pages/team";
+// import Team from "../adminside/pages/team";
 import Bar from "../adminside/pages/bar";
 // import Dashboard from "../adminside/pages/calendar";
 import Contacts from "../adminside/pages/contacts";
@@ -37,7 +37,7 @@ const AdminsideRouter = () => {
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/team" element={<Team />} />
+              {/* <Route path="/team" element={<Team />} /> */}
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/form" element={<Form />} />

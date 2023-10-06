@@ -240,7 +240,7 @@ const Orders = () => {
           rowCount={adminOrder?.totalElements}
           loading={adminOrder?.loading}
           columns={columns}
-          rowsPerPageOptions={[1, 5, 10, 15, 50]}
+          rowsPerPageOptions={[1, 2, 5, 10, 15, 50]}
           onPageChange={(newPage) => handlePageChange(newPage)}
           onPageSizeChange={(newPageSize) => handlePageSizeChange(newPageSize)}
           pagination
