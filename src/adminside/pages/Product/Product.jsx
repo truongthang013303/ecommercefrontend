@@ -9,6 +9,7 @@ import {
   useTheme,
   Menu,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import { tokens } from "../../../theme";
 import Header from "../../components/Header";
@@ -74,6 +75,9 @@ const Product = () => {
     console.log(newPageSize);
     setPageState({ ...pageState, pageSize: newPageSize });
   };
+  const handleDelete = (id)=>{
+    
+  }
 
   const columns = [
     { field: "id", headerName: "ID" },
@@ -96,6 +100,11 @@ const Product = () => {
       type: "number",
       headerAlign: "left",
       align: "left",
+      renderCell: ({row:{price}}) => (
+        <Typography color={colors.greenAccent[500]}>
+          ${price}
+        </Typography>
+      ),
     },
     {
       field: "category",
@@ -103,6 +112,22 @@ const Product = () => {
       flex: 1,
       renderCell: ({ row: { category } }) => {
         return <>{category?.name}</>;
+      },
+    },
+    {
+      field: "delete",
+      headerName: "Delete",
+      flex: 1,
+      renderCell: ({ row: { id } }) => {
+        return (
+          <Button
+            variant="outlined"
+            sx={{ background: `${colors.blueAccent[500]} !important` }}
+            onClick={() => handleDelete(id)}
+          >
+            Delete
+          </Button>
+        );
       },
     },
   ];

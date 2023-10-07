@@ -19,6 +19,7 @@ import Sidebar from "../adminside/pages/global/Sidebar";
 import Orders from "../adminside/pages/Orders/Orders";
 import Product from "../adminside/pages/Product/Product";
 import Category from "../adminside/pages/Category/Category";
+import Users from "../adminside/pages/User/Users";
 
 const AdminsideRouter = () => {
 
@@ -50,6 +51,7 @@ const AdminsideRouter = () => {
               <Route path="/order" element={<Orders />} />
               <Route path="/product" element={<Product />} />
               <Route path="/category" element={<Category />} />
+              <Route path="/user" element={<Users />} />
             </Routes>
           </main>
         </div>
