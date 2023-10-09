@@ -1,5 +1,5 @@
 import { api } from "../../../config/apiConfig";
-import { GET_USERS_PAGI_FAILURE, GET_USERS_PAGI_REQUEST, GET_USERS_PAGI_SUCCESS } from "./ActioneType";
+import { GET_USERS_PAGI_FAILURE, GET_USERS_PAGI_REQUEST, GET_USERS_PAGI_SUCCESS, UPDATE_USER_FAILURE, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS } from "./ActioneType";
 
 export const getUsersPagi = (reqData) => async (dispatch) => {
     dispatch({ type: GET_USERS_PAGI_REQUEST });
@@ -12,11 +12,26 @@ export const getUsersPagi = (reqData) => async (dispatch) => {
       const res = await api.get(
         `/api/users/all?sort=${sort}&pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
-      console.log("getUsersPagi-AdminOrder.Action.js");
+      console.log("getUsersPagi-AdminUser.Action.js");
       console.log(res);
       dispatch({ type: GET_USERS_PAGI_SUCCESS, payload: res.data });
     } catch (error) {
       dispatch({ type: GET_USERS_PAGI_FAILURE, payload: error.message });
+    }
+  };
+
+export const updateUser = (reqData) => async (dispatch) => {
+    dispatch({ type: UPDATE_USER_REQUEST });
+    try {
+      const res = await api.put(
+        `/api/admin/user`, reqData
+      );
+      console.log("updateUser-AdminUser.Action.js");
+      console.log(res);
+      dispatch({ type: UPDATE_USER_SUCCESS, payload: res.data });
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: UPDATE_USER_FAILURE, payload: error.message });
     }
   };
 

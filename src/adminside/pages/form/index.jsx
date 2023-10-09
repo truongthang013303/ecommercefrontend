@@ -3,21 +3,36 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
+import { useMemo } from "react";
 
-const Form = () => {
+const Form = (props) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   const handleFormSubmit = (values) => {
     console.log(values);
+    props.handleFormSubmit(values);
   };
-
+  const isEdit = useMemo(
+    (initStateFormikDialog) => (initStateFormikDialog) => {
+      const keys1 = Object.keys(initStateFormikDialog);
+      for (let key of keys1) {
+        if (initStateFormikDialog[key] !== "") {
+          return true;
+        }
+      }
+      return false;
+    },
+    []
+  );
   return (
     <Box m="20px">
+      {isEdit(props.initialValues)==true?<Header title="UPDATE USER" subtitle="Update a User Profile" />:
       <Header title="CREATE USER" subtitle="Create a New User Profile" />
-
+      }
       <Formik
         onSubmit={handleFormSubmit}
-        initialValues={initialValues}
+        // initialValues={initialValues}
+        initialValues={props.initialValues}
         validationSchema={checkoutSchema}
       >
         {({
