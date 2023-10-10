@@ -1,5 +1,5 @@
 import { api } from "../../../config/apiConfig";
-import { ADD_USER_FAILURE, ADD_USER_REQUEST, ADD_USER_SUCCESS, GET_USERS_PAGI_FAILURE, GET_USERS_PAGI_REQUEST, GET_USERS_PAGI_SUCCESS, UPDATE_USER_FAILURE, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS } from "./ActioneType";
+import { ADD_USER_FAILURE, ADD_USER_REQUEST, ADD_USER_SUCCESS, DELETE_USER_FAILURE, DELETE_USER_REQUEST, DELETE_USER_SUCCESS, GET_USERS_PAGI_FAILURE, GET_USERS_PAGI_REQUEST, GET_USERS_PAGI_SUCCESS, UPDATE_USER_FAILURE, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS } from "./ActioneType";
 
 export const getUsersPagi = (reqData) => async (dispatch) => {
     dispatch({ type: GET_USERS_PAGI_REQUEST });
@@ -50,19 +50,18 @@ export const addUser = (reqData) => async (dispatch) => {
     }
   };
 
-// export const deleteOrder = (orderId)=> {
-//     console.log('deleteOrder-orderId:', orderId);
+export const deleteUser = (id)=> {
+    console.log('deleteUser-id:', id);
 
-//     return async (dispatch)=>{
-//         dispatch({type:DELETE_ORDER_REQUEST});
-//         try{
-//             const response = await api.delete(`/api/admin/orders/${orderId}/delete`)
-//             console.log('response', response);
-//             // const data = response.data;
-//             dispatch({type:DELETE_ORDER_SUCCESS, payload: response });
-//         }catch(error){
-//             console.log(error);
-//             dispatch({type:DELETE_ORDER_FAILURE, payload: error.message})
-//         }
-//     }
-// }
+    return async (dispatch)=>{
+        dispatch({type:DELETE_USER_REQUEST});
+        try{
+            const response = await api.delete(`/api/admin/user/${id}/delete`)
+            console.log('response', response);
+            dispatch({type:DELETE_USER_SUCCESS, payload: id });
+        }catch(error){
+            console.log(error);
+            dispatch({type:DELETE_USER_FAILURE, payload: error.message})
+        }
+    }
+}

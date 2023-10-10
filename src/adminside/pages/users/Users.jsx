@@ -2,7 +2,7 @@ import "./users.scss";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { addUser, getUsersPagi, updateUser } from "../../../State/Admin/User/Action";
+import { addUser, deleteUser, getUsersPagi, updateUser } from "../../../State/Admin/User/Action";
 import {
   Box,
   Button,
@@ -151,7 +151,7 @@ const Users = () => {
   };
 
   const handleDelete = (id) => {
-    console.log('handleDelete', id);
+    dispatch(deleteUser(id));
   };
 
   return (
@@ -238,6 +238,7 @@ const Users = () => {
           //   },
           // }}
           checkboxSelection
+          disableSelectionOnClick
           // disableRowSelectionOnClick
           // disableColumnFilter
           // disableDensitySelector

@@ -2,6 +2,9 @@ import {
   ADD_USER_FAILURE,
   ADD_USER_REQUEST,
   ADD_USER_SUCCESS,
+  DELETE_USER_FAILURE,
+  DELETE_USER_REQUEST,
+  DELETE_USER_SUCCESS,
   GET_USERS_PAGI_FAILURE,
   GET_USERS_PAGI_REQUEST,
   GET_USERS_PAGI_SUCCESS,
@@ -22,6 +25,7 @@ const adminUserReducer = (state = initialState, action) => {
     case GET_USERS_PAGI_REQUEST:
     case UPDATE_USER_REQUEST:
     case ADD_USER_REQUEST:
+    case DELETE_USER_REQUEST:
       return {
         ...state,
         loading: true,
@@ -51,7 +55,20 @@ const adminUserReducer = (state = initialState, action) => {
         users: [...state.users, action.payload],
         error: "",
       };
+    case DELETE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        users: state.users.filter(u=>u.id!=action.payload),
+        error: "",
+      };
     case UPDATE_USER_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case DELETE_USER_FAILURE:
       return {
         ...state,
         loading: false,
