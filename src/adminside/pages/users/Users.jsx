@@ -1,28 +1,18 @@
-import DataTable from "../../components/dataTable/DataTable";
 import "./users.scss";
 import { useState } from "react";
-import Add from "../../components/add/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addUser, getUsersPagi, updateUser } from "../../../State/Admin/User/Action";
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
   Typography,
   useTheme,
 } from "@mui/material";
-import Form from "../form";
 import { tokens } from "../../../theme";
 import { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import DialogFormDynamic from "../../components/DialogFormDynamic";
-// import { useQuery } from "@tanstack/react-query";
 
 const columns = [
   { field: "id", headerName: "ID" },
@@ -68,27 +58,16 @@ const columns = [
   },
 ];
 
-const fields = [
-  {
-    field: "firstName",
-    name: "First Name",
-    type: "text",
-    variant: "filled",
-    girdColumn: "span 2",
-  },
-  {
-    field: "lastName",
-    name: "Last Name",
-    type: "text",
-    variant: "filled",
-    girdColumn: "span 2",
-  },
-];
-
 const Users = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const dispatch = useDispatch();
+  const [pageState, setPageState] = useState({
+    sort: null,
+    pageNumber: 0,
+    pageSize: 1,
+  });
+
   const { adminUser } = useSelector((store) => store);
 
   const [open, setOpen] = useState(false);
@@ -98,14 +77,6 @@ const Users = () => {
     email: "",
     mobile:"",
     password:"",
-    // contact: "",
-    // address1: "",
-    // address2: "",
-  });
-  const [pageState, setPageState] = useState({
-    sort: null,
-    pageNumber: 0,
-    pageSize: 1,
   });
 
   const actionColumn = useMemo(
@@ -137,20 +108,6 @@ const Users = () => {
     }),
     []
   );
-
-  const isEdit = useMemo(
-    (initStateFormikDialog) => (initStateFormikDialog) => {
-      const keys1 = Object.keys(initStateFormikDialog);
-      for (let key of keys1) {
-        if (initStateFormikDialog[key] !== "") {
-          return true;
-        }
-      }
-      return false;
-    },
-    []
-  );
-
   useEffect(() => {
     dispatch(getUsersPagi(pageState));
     //use location.query
@@ -170,14 +127,8 @@ const Users = () => {
     });
     setOpen(false);
   };
-
-  // const getRowFromChildrenDataTable = (row) => {
-  //   console.log("row from child DataTable.jsx:", row);
-  //   setInitStateFormikDialog(row);
-  //   setOpen(!open);
-  // };
   const handleEditButton = (row) => {
-    console.log("row from handleEditButton:", row);
+    // console.log("row from handleEditButton:", row);
     setInitStateFormikDialog(row);
     setOpen(!open);
   };
@@ -186,13 +137,11 @@ const Users = () => {
     setPageState({ ...pageState, pageSize: newPageSize });
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageNumberChange = (newPage) => {
     setPageState({ ...pageState, pageNumber: newPage });
   };
 
   const handleFormSubmit = (values, isEdit) => {
-    console.log('handleFormSubmit-Users.jsx:', values);
-    console.log('isEdit:', isEdit);
     if(isEdit){
       dispatch(updateUser(values));
     }else{
@@ -204,6 +153,7 @@ const Users = () => {
   const handleDelete = (id) => {
     console.log('handleDelete', id);
   };
+
   return (
     <div className="users h-4/5 w-full">
       {/* header of table */}
@@ -225,13 +175,6 @@ const Users = () => {
         </Button>
       </div>
 
-      {/* DataGrid Table */}
-      {/* <DataTable
-        slug="users"
-        columns={columns}
-        rows={adminUser?.users}
-        getRowFromChildrenDataTable={getRowFromChildrenDataTable}
-      /> */}
       <Box
         m="1em 0 0 0"
         height="80vh"
@@ -271,7 +214,7 @@ const Users = () => {
           page={adminUser?.pageNumber}
           pageSize={adminUser?.pageSize}
           paginationMode="server"
-          onPageChange={(newPage) => handlePageChange(newPage)}
+          onPageChange={(newPage) => handlePageNumberChange(newPage)}
           onPageSizeChange={(newPageSize) => handlePageSizeChange(newPageSize)}
           rowsPerPageOptions={[1, 2, 5, 10, 15, 50]}
 
@@ -301,27 +244,6 @@ const Users = () => {
           // disableColumnSelector
         />
       </Box>
-
-      {/* Dialog */}
-      {/* <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          {isEdit(initStateFormikDialog) == true ? "Update" : "Add New User"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText>
-          <Form
-            initialValues={initStateFormikDialog}
-            handleFormSubmit={handleFormSubmit}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions>
-      </Dialog> */}
 
       <DialogFormDynamic
         open={open}

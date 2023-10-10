@@ -3,9 +3,9 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "./Header";
-import { useEffect, useMemo, useState } from "react";
 import MyRecursiveContainer from "./MyRecursiveContainer";
 import { shallowEqual } from "../../utils";
+import { useMemo } from "react";
 
 const FormikDynamic = (props) => {
   // const init = props.initialValues;
@@ -19,8 +19,8 @@ const FormikDynamic = (props) => {
   // });
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const handleFormSubmit = (values) => {
-    console.log("handleFormSubmit-FormikDynamic.jsx");
-    console.log(values);
+    // console.log("handleFormSubmit-FormikDynamic.jsx");
+    // console.log(values);
     if (!shallowEqual(values, props.initialValues)) {
       if (isEdit(props.initialValues)) {
         props.handleFormSubmit(values, isEdit(props.initialValues));
@@ -28,7 +28,7 @@ const FormikDynamic = (props) => {
         props.handleFormSubmit(values, isEdit(props.initialValues));
       }
     } else {
-      alert("Nothing changed check again!!!");
+      alert("Nothing changed to be create or update!");
     }
   };
 
@@ -65,7 +65,6 @@ const FormikDynamic = (props) => {
           handleSubmit,
         }) => (
           <form onSubmit={handleSubmit}>
-            {console.log("errors validation formik-FormikDynamic.jsx:", errors)}
             <Box
               display="grid"
               gap="30px"
@@ -82,6 +81,10 @@ const FormikDynamic = (props) => {
                 errors={errors}
                 touched={touched}
               ></MyRecursiveContainer>
+            </Box>
+
+            <Box>
+              {Object.keys(errors).length != 0 ? JSON.stringify(errors) : ""}
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
@@ -109,13 +112,14 @@ const checkoutSchema = yup.object().shape({
   // address1: yup.string().required("required"),
   // address2: yup.string().required("required"),
 });
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  // contact: "",
-  // address1: "",
-  // address2: "",
-};
+
+// const initialValues = {
+//   firstName: "",
+//   lastName: "",
+//   email: "",
+//   contact: "",
+//   address1: "",
+//   address2: "",
+// };
 
 export default FormikDynamic;
