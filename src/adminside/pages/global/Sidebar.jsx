@@ -151,7 +151,7 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="Products"
-              to="/admin/product"
+              to="/admin/products"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -172,7 +172,7 @@ const Sidebar = () => {
             />
             <Item
               title="Users"
-              to="/admin/user"
+              to="/admin/users"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}

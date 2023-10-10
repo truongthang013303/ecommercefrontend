@@ -17,10 +17,11 @@ import Topbar from "../adminside/pages/global/Topbar";
 import Sidebar from "../adminside/pages/global/Sidebar";
 // import TestView from "../adminside/pages/testview";
 import Orders from "../adminside/pages/Orders/Orders";
-import Product from "../adminside/pages/Product/Product";
+// import Product from "../adminside/pages/Product/Product";
 import Category from "../adminside/pages/Category/Category";
 // import Users from "../adminside/pages/User/Users";
 import Users from "../adminside/pages/users/Users";
+import Products from "../adminside/pages/products/Products";
 
 const AdminsideRouter = () => {
 
@@ -50,7 +51,7 @@ const AdminsideRouter = () => {
               {/* <Route path="/calendar" element={<Calendar />} /> */}
               {/* <Route path="/geography" element={<Geography />} /> */}
               <Route path="/order" element={<Orders />} />
-              <Route path="/product" element={<Product />} />
+              <Route path="/products" element={<Products />} />
               <Route path="/category" element={<Category />} />
               {/* <Route path="/user" element={<Users />} /> */}
               <Route path="/users" element={<Users />} />

@@ -3,7 +3,6 @@ import {
   FIND_PRODUCTS_FAILURE,
   FIND_PRODUCTS_REQUEST,
   FIND_PRODUCTS_SUCCESS,
-  FIND_PRODUCT_BY_CATEGORY_REQUEST,
   FIND_PRODUCT_BY_ID_FAILURE,
   FIND_PRODUCT_BY_ID_REQUEST,
   FIND_PRODUCT_BY_ID_SUCCESS,
@@ -31,6 +30,7 @@ export const customerProductReducer = (state = initialState, action) => {
         loading: false,
         error: null,
         products: action.payload,
+        totalElements: action.payload.totalElements,
       };
 
     case FIND_PRODUCT_BY_ID_SUCCESS:
