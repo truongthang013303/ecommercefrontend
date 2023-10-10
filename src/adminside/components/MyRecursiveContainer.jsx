@@ -28,6 +28,22 @@ const MyRecursiveContainer = ({
             sx={{ gridColumn: "span 12" }}
           />
         );
+      case "password":
+        return (
+          <TextField
+            fullWidth
+            variant="filled"
+            type="password"
+            label={column.headerName}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            value={values[column.field]}
+            name={column.field}
+            error={!!touched[column.field] && !!errors[column.field]}
+            helperText={touched[column.field] && errors[column.field]}
+            sx={{ gridColumn: "span 12" }}
+          />
+        );
       case "number":
         return (
           <TextField

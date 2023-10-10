@@ -1,5 +1,5 @@
 import { api } from "../../../config/apiConfig";
-import { GET_USERS_PAGI_FAILURE, GET_USERS_PAGI_REQUEST, GET_USERS_PAGI_SUCCESS, UPDATE_USER_FAILURE, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS } from "./ActioneType";
+import { ADD_USER_FAILURE, ADD_USER_REQUEST, ADD_USER_SUCCESS, GET_USERS_PAGI_FAILURE, GET_USERS_PAGI_REQUEST, GET_USERS_PAGI_SUCCESS, UPDATE_USER_FAILURE, UPDATE_USER_REQUEST, UPDATE_USER_SUCCESS } from "./ActioneType";
 
 export const getUsersPagi = (reqData) => async (dispatch) => {
     dispatch({ type: GET_USERS_PAGI_REQUEST });
@@ -32,6 +32,21 @@ export const updateUser = (reqData) => async (dispatch) => {
     } catch (error) {
       console.log(error);
       dispatch({ type: UPDATE_USER_FAILURE, payload: error.message });
+    }
+  };
+
+export const addUser = (reqData) => async (dispatch) => {
+    dispatch({ type: ADD_USER_REQUEST });
+    try {
+      const res = await api.post(
+        `/api/admin/user/signup`, reqData
+      );
+      console.log("addUser-AdminUser.Action.js");
+      console.log(res);
+      dispatch({ type: ADD_USER_SUCCESS, payload: res.data });
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: ADD_USER_FAILURE, payload: error.message });
     }
   };
 

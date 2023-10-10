@@ -4,7 +4,7 @@ import { useState } from "react";
 import Add from "../../components/add/Add";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getUsersPagi, updateUser } from "../../../State/Admin/User/Action";
+import { addUser, getUsersPagi, updateUser } from "../../../State/Admin/User/Action";
 import {
   Box,
   Button,
@@ -58,6 +58,14 @@ const columns = [
     align: "left",
     flex: 1,
   },
+  {
+    field: "password",
+    headerName: "Password",
+    type: "password",
+    headerAlign: "left",
+    align: "left",
+    flex: 1,
+  },
 ];
 
 const fields = [
@@ -88,9 +96,11 @@ const Users = () => {
     firstName: "",
     lastName: "",
     email: "",
-    contact: "",
-    address1: "",
-    address2: "",
+    mobile:"",
+    password:"",
+    // contact: "",
+    // address1: "",
+    // address2: "",
   });
   const [pageState, setPageState] = useState({
     sort: null,
@@ -152,9 +162,11 @@ const Users = () => {
       firstName: "",
       lastName: "",
       email: "",
-      contact: "",
-      address1: "",
-      address2: "",
+      mobile:"",
+      password:"",
+      // contact: "",
+      // address1: "",
+      // address2: "",
     });
     setOpen(false);
   };
@@ -178,9 +190,14 @@ const Users = () => {
     setPageState({ ...pageState, pageNumber: newPage });
   };
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (values, isEdit) => {
     console.log('handleFormSubmit-Users.jsx:', values);
-    dispatch(updateUser(values));
+    console.log('isEdit:', isEdit);
+    if(isEdit){
+      dispatch(updateUser(values));
+    }else{
+      dispatch(addUser(values));
+    }
     handleClose();
   };
 
