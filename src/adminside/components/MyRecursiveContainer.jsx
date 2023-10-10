@@ -10,11 +10,12 @@ const MyRecursiveContainer = ({
   errors,
   touched,
 }) => {
-  const builder = (column) => {
+  const builder = (column, index) => {
     switch (column.type) {
       case "text":
         return (
           <TextField
+            key={index}
             fullWidth
             variant="filled"
             type="text"
@@ -31,6 +32,7 @@ const MyRecursiveContainer = ({
       case "password":
         return (
           <TextField
+            key={index}
             fullWidth
             variant="filled"
             type="password"
@@ -47,6 +49,7 @@ const MyRecursiveContainer = ({
       case "number":
         return (
           <TextField
+            key={index}
             fullWidth
             variant="filled"
             type="number"
@@ -63,6 +66,7 @@ const MyRecursiveContainer = ({
       case "tel":
         return (
           <TextField
+            key={index}
             fullWidth
             variant="filled"
             type="tel"
@@ -79,6 +83,7 @@ const MyRecursiveContainer = ({
       case "email":
         return (
           <TextField
+            key={index}
             fullWidth
             variant="filled"
             type="email"
@@ -102,8 +107,8 @@ const MyRecursiveContainer = ({
 
   return (
     <>
-      {columns.map((c) => {
-        return builder(c);
+      {columns.map((c, index) => {
+        return builder(c, index);
       })}
     </>
   );
