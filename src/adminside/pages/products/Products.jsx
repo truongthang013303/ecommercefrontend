@@ -1,20 +1,16 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import {
-  Box,
-  Button,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../../theme";
 import { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import DialogFormDynamic from "../../components/DialogFormDynamic";
 import { findProducts } from "../../../State/Product/Action";
+import { filterCategories, getAllCategories } from "../../../State/Category/Action";
 
 const columns = [
-//   { field: "id", headerName: "ID" },
+  //   { field: "id", headerName: "ID" },
   {
     field: "title",
     headerName: "Title",
@@ -24,7 +20,7 @@ const columns = [
     type: "text",
   },
   {
-    field: "descrioption",
+    field: "description",
     headerName: "Description",
     headerAlign: "left",
     align: "left",
@@ -80,9 +76,9 @@ const columns = [
     flex: 1,
   },
   {
-    field: "size",
-    headerName: "Size",
-    type: "text",
+    field: "sizes",
+    headerName: "Sizes",
+    type: "array",
     headerAlign: "left",
     align: "left",
     flex: 1,
@@ -95,14 +91,14 @@ const columns = [
     align: "left",
     flex: 1,
   },
-  {
-    field: "category",
-    headerName: "Category",
-    type: "text",
-    headerAlign: "left",
-    align: "left",
-    flex: 1,
-  },
+  // {
+  //   field: "category",
+  //   headerName: "Category",
+  //   type: "object",
+  //   headerAlign: "left",
+  //   align: "left",
+  //   flex: 1,
+  // },
 ];
 
 const Products = () => {
@@ -115,16 +111,47 @@ const Products = () => {
     pageSize: 1,
   });
 
-  const { product } = useSelector((store) => store);
+  const { product, category } = useSelector((store) => store);
 
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(getAllCategories());
+  }, []);
+
   const [initStateFormikDialog, setInitStateFormikDialog] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    mobile:"",
-    password:"",
+    title: "",
+    description: "",
+    price: "",
+    discountedPrice: "",
+    discountPercent: "",
+    quantity: "",
+    brand: "",
+    color: "",
+    sizes: [
+      { name: "S", quantity: 0 },
+      { name: "M", quantity: 0 },
+      { name: "L", quantity: 0 },
+      { name: "XL", quantity: 0 },
+    ],
+    imageUrl: "",
+    // topLevelCategory:'Men',
+    // topLevel:{selected:'Men', cates:['Men','Women','Others']},
+    // categories:category?.categories,
+    // topLevelCategory:['Men', 'Women'],
+    // secondLevelCategory:['Clothing','Accessories'],
+    // thirdLevelCategory:['Pants', 'TShirt','Dresses','Necklaces'],
   });
+  const additionalColsDataGrid = [
+    {
+      field: "category",
+      headerName: "Category",
+      type: "object",
+      headerAlign: "left",
+      align: "left",
+      flex: 1,
+    },
+  ];
 
   const actionColumn = useMemo(
     () => ({
@@ -144,7 +171,10 @@ const Products = () => {
 
             <Button
               variant="contained"
-              sx={{ background: `${colors.blueAccent[500]} !important` , marginLeft: '1em'}}
+              sx={{
+                background: `${colors.blueAccent[500]} !important`,
+                marginLeft: "1em",
+              }}
               onClick={() => handleDelete(row.id)}
             >
               Delete
@@ -166,13 +196,23 @@ const Products = () => {
       title: "",
       description: "",
       price: "",
-      discountedPrice:"",
-      discountPercent:"",
-      quantity:"",
+      discountedPrice: "",
+      discountPercent: "",
+      quantity: "",
+      brand: "",
+      color: "",
+      sizes: [
+        { name: "S", quantity: 0 },
+        { name: "M", quantity: 0 },
+        { name: "L", quantity: 0 },
+        { name: "XL", quantity: 0 },
+      ],
+      imageUrl: "",
     });
     setOpen(false);
   };
   const handleEditButton = (row) => {
+    console.log("handleEditButton-row:", row);
     setInitStateFormikDialog(row);
     setOpen(!open);
   };
@@ -186,10 +226,11 @@ const Products = () => {
   };
 
   const handleFormSubmit = (values, isEdit) => {
-    if(isEdit){
-    //   dispatch(updateUser(values));
-    }else{
-    //   dispatch(addUser(values));
+    console.log(values);
+    if (isEdit) {
+      //   dispatch(updateUser(values));
+    } else {
+      //   dispatch(addUser(values));
     }
     handleClose();
   };
@@ -218,7 +259,7 @@ const Products = () => {
           Add New Product
         </Button>
       </div>
-
+      {/* DataGridTable */}
       <Box
         m="1em 0 0 0"
         height="80vh"
@@ -249,9 +290,15 @@ const Products = () => {
         }}
       >
         <DataGrid
-          rows={product?.products?.content==undefined?[{id:1}]:product?.products?.content}
-          columns={[...columns, actionColumn]}
-          rowCount={product?.totalElements==undefined?0:product.totalElements}
+          rows={
+            product?.products?.content == undefined
+              ? [{ id: 1 }]
+              : product?.products?.content
+          }
+          columns={[...columns, ...additionalColsDataGrid, actionColumn]}
+          rowCount={
+            product?.totalElements == undefined ? 0 : product.totalElements
+          }
           loading={product?.loading}
           pagination
           page={pageState?.pageNumber}
@@ -260,41 +307,25 @@ const Products = () => {
           onPageChange={(newPage) => handlePageNumberChange(newPage)}
           onPageSizeChange={(newPageSize) => handlePageSizeChange(newPageSize)}
           rowsPerPageOptions={[1, 2, 5, 10, 15, 50]}
-
-          // onSelectionModelChange={(ids) => {
-          //   const selectedIDs = new Set(ids);
-          //   const selectedRowData = adminUser?.users.filter((row) =>
-          //     // if id of row is number, convert to String row.id.toString()
-          //     selectedIDs.has(row.id)
-          //   );
-          //   console.log(
-          //     "selectedRowData-onSelectionModelChange:",
-          //     selectedRowData
-          //   );
-          // }}
-
-          // slots={{ toolbar: GridToolbar }}
-          // slotProps={{
-          //   toolbar: {
-          //     showQuickFilter: true,
-          //     quickFilterProps: { debounceMs: 500 },
-          //   },
-          // }}
           checkboxSelection
           disableSelectionOnClick
-          // disableRowSelectionOnClick
-          // disableColumnFilter
-          // disableDensitySelector
-          // disableColumnSelector
         />
       </Box>
 
+      {/* Formik Edit, Add */}
       <DialogFormDynamic
         open={open}
         onClose={handleClose}
-        initStateFormikDialog={initStateFormikDialog}
+        initStateFormikDialog={{...initStateFormikDialog, categories: category.categories.filter(c=>c.level===3)}}
         handleFormSubmit={handleFormSubmit}
-        columns={columns}
+        columns={[
+          ...columns,
+          {
+            field: "category",
+            type: "selectCategoryProduct",
+            headerName: "Category",
+          },
+        ]}
       />
     </div>
   );

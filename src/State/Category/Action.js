@@ -1,5 +1,8 @@
 import { api } from "../../config/apiConfig";
 import {
+  FILTER_CATEGORIES_FAILURE,
+  FILTER_CATEGORIES_REQUEST,
+  FILTER_CATEGORIES_SUCCESS,
   FIND_CATEGORIES_FAILURE,
   FIND_CATEGORIES_PAGI_FAILURE,
   FIND_CATEGORIES_PAGI_REQUEST,
@@ -9,12 +12,15 @@ import {
   FIND_CATEGORY_BY_NAME_AND_PARENT_FAILURE,
   FIND_CATEGORY_BY_NAME_AND_PARENT_REQUEST,
   FIND_CATEGORY_BY_NAME_AND_PARENT_SUCCESS,
+  GET_ALL_CATEGORIES_FAILURE,
+  GET_ALL_CATEGORIES_REQUEST,
+  GET_ALL_CATEGORIES_SUCCESS,
 } from "./ActionType";
 
 export const findCategories = () => async (dispatch) => {
   dispatch({ type: FIND_CATEGORIES_REQUEST });
   try {
-    const response = await api.get(`/api/categories`);
+    const response = await api.get(`/api/categories/all`);
     console.log("findCategories-Category.Action.js");
 
     const levelOne = response.data.filter((c) => c.level === 1);
@@ -66,6 +72,20 @@ export const findCategories = () => async (dispatch) => {
     dispatch({ type: FIND_CATEGORIES_FAILURE, payload: error.message });
   }
 };
+
+export const getAllCategories = (reqData) => async (dispatch) => {
+  dispatch({ type: GET_ALL_CATEGORIES_REQUEST });
+  try {
+    const response = await api.get(`/api/categories/all`);
+    console.log("getAllCategories-Category.Action.js");
+    console.log(response);
+    dispatch({ type: GET_ALL_CATEGORIES_SUCCESS, payload: response.data });
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: GET_ALL_CATEGORIES_FAILURE, payload: error.message });
+  }
+};
+
 export const findCategoriesPagi = (reqData) => async (dispatch) => {
   dispatch({ type: FIND_CATEGORIES_PAGI_REQUEST });
   const { sort, pageNumber, pageSize } = reqData;
@@ -76,6 +96,20 @@ export const findCategoriesPagi = (reqData) => async (dispatch) => {
     dispatch({ type: FIND_CATEGORIES_PAGI_SUCCESS, payload: response.data });
   } catch (error) {
     dispatch({ type: FIND_CATEGORIES_PAGI_FAILURE, payload: error.message });
+  }
+};
+
+export const filterCategories = (reqData) => async (dispatch) => {
+  dispatch({ type: FILTER_CATEGORIES_REQUEST });
+  const { sort, pageNumber, pageSize, level } = reqData;
+  try {
+    const response = await api.get(`/api/categories?sort=${sort}&pageNumber=${pageNumber}&pageSize=${pageSize}&level=${level}`);
+    console.log("filterCategories-Category.Action.js");
+    console.log(response);
+    dispatch({ type: FILTER_CATEGORIES_SUCCESS, payload: response.data });
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: FILTER_CATEGORIES_FAILURE, payload: error.message });
   }
 };
 
