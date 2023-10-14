@@ -41,7 +41,7 @@ export const customerProductReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: null,
-        products: state.products?.map(p=>p.id===action.payload.id?action.payload:p),
+        products: {...state.products, content:[...state.products?.content.map(p=>p.id===action.payload.id?action.payload:p)]},
       };
     case FIND_PRODUCTS_SUCCESS:
       return {

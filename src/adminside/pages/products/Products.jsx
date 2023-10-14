@@ -6,7 +6,7 @@ import { tokens } from "../../../theme";
 import { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import DialogFormDynamic from "../../components/DialogFormDynamic";
-import { createProduct, findProducts } from "../../../State/Product/Action";
+import { createProduct, findProducts, updateProduct } from "../../../State/Product/Action";
 import {
   filterCategories,
   getAllCategories,
@@ -99,7 +99,7 @@ const Products = () => {
   const [pageState, setPageState] = useState({
     sort: null,
     pageNumber: 0,
-    pageSize: 1,
+    pageSize: 10,
   });
 
   const { product, category } = useSelector((store) => store);
@@ -227,10 +227,10 @@ const Products = () => {
 
   const handleFormSubmit = (values, isEdit) => {
     console.log(values);
+    console.log('isEdit:',isEdit);
     if (isEdit) {
-      //   dispatch(updateUser(values));
+        dispatch(updateProduct({req: values, productId: values.id}));
     } else {
-      //   dispatch(addUser(values));
       dispatch(
         createProduct({
           ...values,
