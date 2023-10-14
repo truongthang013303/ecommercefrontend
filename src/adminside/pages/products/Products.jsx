@@ -1,16 +1,30 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { Box, Button, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../../theme";
 import { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import DialogFormDynamic from "../../components/DialogFormDynamic";
-import { findProducts } from "../../../State/Product/Action";
-import { filterCategories, getAllCategories } from "../../../State/Category/Action";
+import { createProduct, findProducts } from "../../../State/Product/Action";
+import {
+  filterCategories,
+  getAllCategories,
+} from "../../../State/Category/Action";
 
 const columns = [
   //   { field: "id", headerName: "ID" },
+  {
+    field: "imageUrl",
+    headerName: "ImageUrl",
+    type: "text",
+    headerAlign: "left",
+    align: "left",
+    flex: 1,
+    renderCell: ({ row }) => {
+      return <Avatar src={row.imageUrl} />;
+    },
+  },
   {
     field: "title",
     headerName: "Title",
@@ -75,36 +89,13 @@ const columns = [
     align: "left",
     flex: 1,
   },
-  {
-    field: "sizes",
-    headerName: "Sizes",
-    type: "array",
-    headerAlign: "left",
-    align: "left",
-    flex: 1,
-  },
-  {
-    field: "imageUrl",
-    headerName: "ImageUrl",
-    type: "text",
-    headerAlign: "left",
-    align: "left",
-    flex: 1,
-  },
-  // {
-  //   field: "category",
-  //   headerName: "Category",
-  //   type: "object",
-  //   headerAlign: "left",
-  //   align: "left",
-  //   flex: 1,
-  // },
 ];
 
 const Products = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const dispatch = useDispatch();
+  const [isEdit, setIsEdit] = useState(false);
   const [pageState, setPageState] = useState({
     sort: null,
     pageNumber: 0,
@@ -119,6 +110,13 @@ const Products = () => {
     dispatch(getAllCategories());
   }, []);
 
+  const sizesOri = [
+    { name: "S", quantity: 0 },
+    { name: "M", quantity: 0 },
+    { name: "L", quantity: 0 },
+    { name: "XL", quantity: 0 },
+  ];
+
   const [initStateFormikDialog, setInitStateFormikDialog] = useState({
     title: "",
     description: "",
@@ -128,25 +126,19 @@ const Products = () => {
     quantity: "",
     brand: "",
     color: "",
-    sizes: [
-      { name: "S", quantity: 0 },
-      { name: "M", quantity: 0 },
-      { name: "L", quantity: 0 },
-      { name: "XL", quantity: 0 },
-    ],
+    // sizes: [
+    //   { name: "S", quantity: 0 },
+    //   { name: "M", quantity: 0 },
+    //   { name: "L", quantity: 0 },
+    //   { name: "XL", quantity: 0 },
+    // ],
     imageUrl: "",
-    // topLevelCategory:'Men',
-    // topLevel:{selected:'Men', cates:['Men','Women','Others']},
-    // categories:category?.categories,
-    // topLevelCategory:['Men', 'Women'],
-    // secondLevelCategory:['Clothing','Accessories'],
-    // thirdLevelCategory:['Pants', 'TShirt','Dresses','Necklaces'],
   });
   const additionalColsDataGrid = [
     {
       field: "category",
       headerName: "Category",
-      type: "object",
+      type: "text",
       headerAlign: "left",
       align: "left",
       flex: 1,
@@ -201,20 +193,28 @@ const Products = () => {
       quantity: "",
       brand: "",
       color: "",
-      sizes: [
-        { name: "S", quantity: 0 },
-        { name: "M", quantity: 0 },
-        { name: "L", quantity: 0 },
-        { name: "XL", quantity: 0 },
-      ],
+      // sizes: [
+      //   { name: "S", quantity: 0 },
+      //   { name: "M", quantity: 0 },
+      //   { name: "L", quantity: 0 },
+      //   { name: "XL", quantity: 0 },
+      // ],
       imageUrl: "",
     });
     setOpen(false);
+    setIsEdit(false);
   };
   const handleEditButton = (row) => {
     console.log("handleEditButton-row:", row);
+    //Sizes missing. s,m,l missing xl => add it to row.sizes
+    const rowSizesName = row.sizes.map((s) => s.name);
+    const differ = sizesOri.filter((s) => !rowSizesName.includes(s.name));
+    if (differ.length != 0) {
+      row.sizes = [...row.sizes, ...differ];
+    }
     setInitStateFormikDialog(row);
     setOpen(!open);
+    setIsEdit(true);
   };
 
   const handlePageSizeChange = (newPageSize) => {
@@ -231,12 +231,25 @@ const Products = () => {
       //   dispatch(updateUser(values));
     } else {
       //   dispatch(addUser(values));
+      dispatch(
+        createProduct({
+          ...values,
+          topLevelCategory: values.category.parentCategory.parentCategory.name,
+          secondLevelCategory: values.category.parentCategory.name,
+          thirdLevelCategory: values.category.name,
+        })
+      );
     }
     handleClose();
   };
 
   const handleDelete = (id) => {
     // dispatch(deleteUser(id));
+  };
+
+  const handleAddNew = () => {
+    setOpen(true);
+    setIsEdit(false);
   };
 
   return (
@@ -254,7 +267,7 @@ const Products = () => {
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => setOpen(true)}
+          onClick={() => handleAddNew()}
         >
           Add New Product
         </Button>
@@ -289,6 +302,7 @@ const Products = () => {
           },
         }}
       >
+        {console.log("datagrid")}
         <DataGrid
           rows={
             product?.products?.content == undefined
@@ -316,10 +330,19 @@ const Products = () => {
       <DialogFormDynamic
         open={open}
         onClose={handleClose}
-        initStateFormikDialog={{...initStateFormikDialog, categories: category.categories.filter(c=>c.level===3)}}
+        isEdit={isEdit}
+        initStateFormikDialog={{
+          ...initStateFormikDialog,
+          categories: category.categories.filter((c) => c.level === 3),
+        }}
         handleFormSubmit={handleFormSubmit}
         columns={[
           ...columns,
+          {
+            field: "sizes",
+            headerName: "Sizes",
+            type: "arrayProductSizes",
+          },
           {
             field: "category",
             type: "selectCategoryProduct",

@@ -8,25 +8,12 @@ import { shallowEqual } from "../../utils";
 import { useMemo } from "react";
 
 const FormikDynamic = (props) => {
-  // const init = props.initialValues;
-  // const [isEd, setIsEd] = useState(()=>{
-  //   for (let i in init) {
-  //     if (init[i] !== "") {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // });
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const handleFormSubmit = (values) => {
     // console.log("handleFormSubmit-FormikDynamic.jsx");
     // console.log(values);
     if (!shallowEqual(values, props.initialValues)) {
-      if (isEdit(props.initialValues)) {
-        props.handleFormSubmit(values, isEdit(props.initialValues));
-      } else {
-        props.handleFormSubmit(values, isEdit(props.initialValues));
-      }
+        props.handleFormSubmit(values, props.isEdit);
     } else {
       alert("Nothing changed to be create or update!");
     }
@@ -46,7 +33,7 @@ const FormikDynamic = (props) => {
   );
   return (
     <Box m="20px">
-      {isEdit(props.initialValues) == true ? (
+      {props.isEdit == true ? (
         <Header title="UPDATE" subtitle="Update" />
       ) : (
         <Header title="CREATE" subtitle="Create" />
@@ -88,7 +75,7 @@ const FormikDynamic = (props) => {
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                {isEdit(props.initialValues) == true ? "Update" : "Create"}
+                {props.isEdit ? "Update" : "Create"}
               </Button>
             </Box>
           </form>

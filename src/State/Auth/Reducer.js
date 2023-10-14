@@ -11,8 +11,6 @@ import {
   REGISTER_SUCCESS,
 } from "./ActionType";
 
-console.log("Auth-Reducer.js");
-
 const initialState = {
   user: null,
   isLoading: false,

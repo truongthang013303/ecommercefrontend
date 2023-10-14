@@ -10,6 +10,7 @@ const DialogFormDynamic = (props) => {
             initialValues={props.initStateFormikDialog}
             handleFormSubmit={props.handleFormSubmit}
             columns={props.columns}
+            isEdit={props.isEdit}
           />
         </DialogContent>
         <DialogActions>

@@ -12,9 +12,10 @@ import {
   FIND_PRODUCT_BY_ID_FAILURE,
   FIND_PRODUCT_BY_ID_REQUEST,
   FIND_PRODUCT_BY_ID_SUCCESS,
+  UPDATE_PRODUCT_FAILURE,
+  UPDATE_PRODUCT_REQUEST,
+  UPDATE_PRODUCT_SUCCESS,
 } from "./ActionType";
-
-console.log("Product-Action.js");
 
 export const findProducts = (reqData) => async (dispatch) => {
   dispatch({ type: FIND_PRODUCTS_REQUEST });
@@ -78,12 +79,26 @@ export const findProductsById = (reqData) => async (dispatch) => {
 export const createProduct = (product) => async (dispatch) => {
   dispatch({ type: CREATE_PRODUCT_REQUEST });
   try {
-    const { data } = await api.post(`/api/admin/products`, product.data);
+    const { data } = await api.post(`/api/admin/products`, product);
     console.log("createProduct-Product.Action.js");
     console.log(data);
     dispatch({ type: CREATE_PRODUCT_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: CREATE_PRODUCT_FAILURE, payload: error.message });
+  }
+};
+
+export const updateProduct = (reqData) => async (dispatch) => {
+  dispatch({ type: UPDATE_PRODUCT_REQUEST });
+  const {req, productId}=reqData;
+  try {
+    const { data } = await api.put(`/api/admin/products/${productId}/update`, req);
+    console.log("updateProduct-Product.Action.js");
+    console.log(data);
+    dispatch({ type: UPDATE_PRODUCT_SUCCESS, payload: data });
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: UPDATE_PRODUCT_FAILURE, payload: error.message });
   }
 };
 

@@ -61,6 +61,7 @@ const columns = [
 const Users = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [isEdit, setIsEdit] = useState(false);
   const dispatch = useDispatch();
   const [pageState, setPageState] = useState({
     sort: null,
@@ -126,11 +127,19 @@ const Users = () => {
       // address2: "",
     });
     setOpen(false);
+    setIsEdit(false);
   };
+
+  const handleAddNew = ()=>{
+    setOpen(true);
+    setIsEdit(false);
+  }
+
   const handleEditButton = (row) => {
     // console.log("row from handleEditButton:", row);
     setInitStateFormikDialog(row);
     setOpen(!open);
+    setIsEdit(true);
   };
 
   const handlePageSizeChange = (newPageSize) => {
@@ -169,7 +178,7 @@ const Users = () => {
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => setOpen(true)}
+          onClick={() => handleAddNew()}
         >
           Add New User
         </Button>
@@ -252,6 +261,7 @@ const Users = () => {
         initStateFormikDialog={initStateFormikDialog}
         handleFormSubmit={handleFormSubmit}
         columns={columns}
+        isEdit={isEdit}
       />
     </div>
   );

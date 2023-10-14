@@ -1,4 +1,12 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import { Field, FieldArray } from "formik";
 import React, { useMemo } from "react";
 
@@ -109,20 +117,27 @@ const MyRecursiveContainer = ({
                 <Field
                   as={TextField}
                   name={`${column.field}.${key}`}
-                  keys={index}
+                  key={index}
                   type={typeof row[key]}
                 ></Field>
               );
             })}
           </div>
         );
-      case "array":
+      case "arrayProductSizes":
+        if (values.sizes == undefined || values.sizes == null)
+          values.sizes = [
+            { name: "S", quantity: 0 },
+            { name: "M", quantity: 0 },
+            { name: "L", quantity: 0 },
+            { name: "XL", quantity: 0 },
+          ];
         return (
           <FieldArray
             name={column.field}
             render={() => {
               return (
-                <Box sx={{ gridColumn: "span 12" }}>
+                <Box sx={{ gridColumn: "span 12" }} id="sizesContainer">
                   {values[column.field].map((i, index) => {
                     return (
                       <div key={index}>
@@ -144,6 +159,44 @@ const MyRecursiveContainer = ({
                       </div>
                     );
                   })}
+
+                  {/* <div>
+                    <Button variant="contained" onClick={()=>{
+                      let test = document.createElement("p");test.innerText='Testing';
+                      document.getElementById('sizesContainer').appendChild(test);
+                    }}>More</Button>
+                  </div> */}
+                  {/* <div>
+                    <TextField
+                    id="sizeQuantityMore"
+                      fullWidth
+                      variant="filled"
+                      type="number"
+                      label="Quantity"
+                      sx={{ gridColumn: "span 1" }}
+                    />
+                    <TextField
+                      id="sizeNameMore"
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      label="Size Name"
+                      sx={{ gridColumn: "span 1" }}
+                    />
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        let name = document.getElementById('sizeNameMore').value;
+                        let quantity = +document.getElementById('sizeQuantityMore').value;
+                        values.sizes = [
+                          ...values.sizes,
+                          { name, quantity},
+                        ];
+                      }}
+                    >
+                      More
+                    </Button>
+                  </div> */}
                 </Box>
               );
             }}
@@ -151,39 +204,34 @@ const MyRecursiveContainer = ({
         );
       case "select":
         return (
-          //Available for primitive type options like string, number. Not allow array, object... cause formik compare object by reference 
-          
+          //Available for primitive type options like string, number. Not allow array, object... cause formik compare object by reference
+
           // column{
           //   field: "category",
           //   type: "select",
           //   headerName: "Category",
           //   options:['men','women']
           // }
-           // <Field type="select" as={Select} name={column.field} label={column.headerName}>
-           //   {column.options.map((o, index) => {
-           //       return <MenuItem value={o} key={index}>{o}</MenuItem>;
-           //     })}
-           // </Field>
+          // <Field type="select" as={Select} name={column.field} label={column.headerName}>
+          //   {column.options.map((o, index) => {
+          //       return <MenuItem value={o} key={index}>{o}</MenuItem>;
+          //     })}
+          // </Field>
 
           //  {category:{selected:'men', options:['men','women']}}
-         <Field type="select" as={Select} name={`${column.field}.selected`}>
+          <Field type="select" as={Select} name={`${column.field}.selected`}>
             {values[column.field].options.map((c, index) => {
-                return <MenuItem value={c} key={index}>{c}</MenuItem>;
-              })}
+              return (
+                <MenuItem value={c} key={index}>
+                  {c}
+                </MenuItem>
+              );
+            })}
           </Field>
         );
       case "selectCategoryProduct":
-        // return (
-        //   <Field type="select" as={Select} name="category">
-        //     {values['categories'].map((c, index) => {
-        //         return (
-        //           <MenuItem value={c} selected={index===1?true:false}>{c.name+'-'+c.parentCategory.name+'-'+c.parentCategory.parentCategory.name}</MenuItem>
-        //         )
-        //       })}
-        //   </Field>
-        // );
         return (
-          <FormControl fullWidth  sx={{ gridColumn: "span 12" }}>
+          <FormControl fullWidth sx={{ gridColumn: "span 12" }}>
             <InputLabel id="demo-simple-select-label">Category</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -195,12 +243,16 @@ const MyRecursiveContainer = ({
             >
               {values["categories"].map((c, index) => {
                 return (
-                  <MenuItem value={c.id===values.category?.id?values.category:c} key={index}>
-                    {'3.'+c.name +
+                  <MenuItem
+                    value={c.id === values.category?.id ? values.category : c}
+                    key={index}
+                  >
+                    {"1." +
+                      c.parentCategory.parentCategory.name +
                       " - 2." +
                       c.parentCategory.name +
-                      " - 1." +
-                      c.parentCategory.parentCategory.name}
+                      " - 3." +
+                      c.name}
                   </MenuItem>
                 );
               })}

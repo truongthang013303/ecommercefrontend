@@ -8,8 +8,6 @@ import adminOrderReducer from './Admin/Order/Reducer';
 import { categoryReducer } from './Category/Reducer';
 import adminUserReducer from './Admin/User/Reducer';
 
-console.log("store.js");
-
 const rootReducers = combineReducers({
     auth: authReducer,
     product: customerProductReducer,
